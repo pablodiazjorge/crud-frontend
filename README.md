@@ -98,6 +98,11 @@ Before running the application, ensure you have the following installed:
   spring.jpa.hibernate.ddl-auto=update
   ```
 
+- Locate the `BookController.java` file in the backend project.
+- Configure the host/port to match the fronend:
+  ```@CrossOrigin("http://localhost:4200/")
+  ```
+
 ---
 
 ## Backend Setup
