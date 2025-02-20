@@ -100,7 +100,8 @@ Before running the application, ensure you have the following installed:
 
 - Locate the `BookController.java` file in the backend project.
 - Configure the host/port to match the fronend:
-  ```@CrossOrigin("http://localhost:4200/")
+  ```properties
+  @CrossOrigin("http://localhost:4200/")
   ```
 
 ---
