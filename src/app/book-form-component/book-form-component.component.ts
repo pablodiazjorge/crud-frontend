@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BookService } from '../services/book.service';
 import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
 import { InputText } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CardModule } from 'primeng/card';
@@ -15,7 +14,6 @@ import { MessageService } from 'primeng/api';
     ReactiveFormsModule,
     FormsModule,
     ButtonModule,
-    ToastModule,
     RouterModule,
     InputText,
     InputNumberModule,
@@ -64,6 +62,7 @@ export class BookFormComponentComponent {
     if (id !== 'new') {
       this.edit = true;
       this.getBookById(+id!); //Cast to integer
+      console.log(this.getBookById(+id!));
     }
   }
 
@@ -74,7 +73,7 @@ export class BookFormComponentComponent {
  */
   getBookById(id: number) {
     this.bookService.getBookById(id).subscribe({
-      next: foundBook => {
+      next: (foundBook) => {
         // Updates the form with the fetched book's data.
         this.formBook.patchValue(foundBook);
       },
@@ -87,8 +86,8 @@ export class BookFormComponentComponent {
         });
         // Redirects the user to the home page.
         this.router.navigateByUrl('/');
-      }
-    })
+      },
+    });
   }
 
   /**
@@ -105,6 +104,7 @@ export class BookFormComponentComponent {
       });
       return;
     }
+    this.isSaveinProgress = true;
     this.bookService.createBook(this.formBook.value).subscribe({
       next: () => {
         this.messageService.add({
@@ -112,15 +112,18 @@ export class BookFormComponentComponent {
           summary: 'Saved',
           detail: 'Book saved correctly.'
         });
+        this.isSaveinProgress = false;
+        this.router.navigateByUrl('/');
       },
       error: () => {
+        this.isSaveinProgress = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: 'Check the fields and try again.'
         });
-      }
-    })
+      },
+    });
   }
 
   /**
@@ -137,6 +140,7 @@ export class BookFormComponentComponent {
       });
       return;
     }
+    this.isSaveinProgress = true;
     this.bookService.updateBook(this.formBook.value).subscribe({
       next: () => {
         this.messageService.add({
@@ -144,15 +148,18 @@ export class BookFormComponentComponent {
           summary: 'Saved',
           detail: 'Book saved correctly.'
         });
+        this.isSaveinProgress = false;
+        this.router.navigateByUrl('/');
       },
       error: () => {
+        this.isSaveinProgress = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: 'Check the fields and try again.'
         });
-      }
-    })
+      },
+    });
   }
 
 }
