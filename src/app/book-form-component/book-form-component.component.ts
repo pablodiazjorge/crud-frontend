@@ -7,6 +7,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { CardModule } from 'primeng/card';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { FileSelectEvent } from 'primeng/fileupload';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @Component({
   selector: 'app-book-form-component',
@@ -17,7 +19,8 @@ import { MessageService } from 'primeng/api';
     RouterModule,
     InputText,
     InputNumberModule,
-    CardModule
+    CardModule,
+    FileUploadModule
   ],
   templateUrl: './book-form-component.component.html',
   styleUrl: './book-form-component.component.scss'
@@ -27,6 +30,7 @@ export class BookFormComponentComponent {
   formBook!: FormGroup;
   isSaveinProgress: boolean = false;
   edit: boolean = false;
+  selectedFile: File | null = null;
 
   /**
  * Constructor for the BookComponent.
@@ -50,6 +54,7 @@ export class BookFormComponentComponent {
       author: ['', Validators.required],
       pages: [1, [Validators.required, Validators.min(1)]], //Initialize to 1
       price: [0, [Validators.required, Validators.min(0)]], //Initialize to 0
+      image: [null]
     })
   }
 
@@ -64,6 +69,10 @@ export class BookFormComponentComponent {
       this.getBookById(+id!); //Cast to integer
       console.log(this.getBookById(+id!));
     }
+  }
+
+  onFileSelected(event: FileSelectEvent) {
+    this.selectedFile = event.files[0];
   }
 
   /**
@@ -104,8 +113,16 @@ export class BookFormComponentComponent {
       });
       return;
     }
+    if (!this.selectedFile) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Choose an image and try again'
+      });
+      return;
+    }
     this.isSaveinProgress = true;
-    this.bookService.createBook(this.formBook.value).subscribe({
+    this.bookService.createBook(this.formBook.value, this.selectedFile).subscribe({
       next: () => {
         this.messageService.add({
           severity: 'success',
@@ -121,6 +138,37 @@ export class BookFormComponentComponent {
           severity: 'error',
           summary: 'Error',
           detail: 'Check the fields and try again.'
+        });
+      },
+    });
+  }
+
+  changeImage(event: FileSelectEvent) {
+    this.selectedFile = event.files[0];
+    if (!this.selectedFile) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Choose an image and try again'
+      });
+      return;
+    }
+    this.bookService.updateBookImage(this.formBook.value.id, this.selectedFile).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Saved',
+          detail: 'Book saved correctly.'
+        });
+        this.isSaveinProgress = false;
+        this.router.navigateByUrl('/');
+      },
+      error: () => {
+        this.isSaveinProgress = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Check the selected file and try again.'
         });
       },
     });
@@ -142,14 +190,37 @@ export class BookFormComponentComponent {
     }
     this.isSaveinProgress = true;
     this.bookService.updateBook(this.formBook.value).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Saved',
-          detail: 'Book saved correctly.'
-        });
-        this.isSaveinProgress = false;
-        this.router.navigateByUrl('/');
+      next: (updatedBook) => {
+        // If a new image is selected, update the image
+        if (this.selectedFile) {
+          this.bookService.updateBookImage(this.formBook.value.id, this.selectedFile).subscribe({
+            next: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Saved',
+                detail: 'Book and image updated correctly.'
+              });
+              this.isSaveinProgress = false;
+              this.router.navigateByUrl('/');
+            },
+            error: () => {
+              this.isSaveinProgress = false;
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to update the image.'
+              });
+            }
+          });
+        } else {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Saved',
+            detail: 'Book updated correctly.'
+          });
+          this.isSaveinProgress = false;
+          this.router.navigateByUrl('/');
+        }
       },
       error: () => {
         this.isSaveinProgress = false;

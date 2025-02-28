@@ -5,7 +5,7 @@
     @for (book of books; track book.id) {
     <p-card header="{{book.title}}" subheader="{{book.author}}" [style]="{ width: '25rem', overflow: 'hidden' }">
         <ng-template #header>
-            <img alt="Card" class="w-full" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
+            <img alt="Card" class="w-full img" height="260px" [src]="book.image?book.image.imageUrl: '/assets/noImage.png'" />
         </ng-template>
         <ng-template #title> {{book.title}} </ng-template>
         <ng-template #subtitle> {{book.author}} </ng-template>

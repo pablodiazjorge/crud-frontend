@@ -16,7 +16,12 @@
             </div>
             <div class="field flex flex-column gap-1">
                 <label for="price">Price</label>
-                <p-input-number inputId="minmaxfraction" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5" formControlName="price" />
+                <p-input-number inputId="minmaxfraction" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5"
+                    formControlName="price" />
+            </div>
+            <div class="field flex flex gap-2">
+                <p-fileupload mode="basic" [chooseLabel]="edit?'Change image':'Choose Image'" chooseIcon="pi pi-upload" name="demo[]" customUpload="true"
+                    accept="image/*" maxFileSize="1000000" (onSelect)="onFileSelected($event)" />
             </div>
             <div class="flex gap-2">
                 <p-button label="Save" [loading]="isSaveinProgress" type="submit" />
