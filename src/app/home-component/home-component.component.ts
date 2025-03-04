@@ -2,31 +2,52 @@ import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { PaginatorModule } from 'primeng/paginator';
-import { Book } from '../models/book';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
+import { Book, BookWithImageDTO } from '../models/book';
 import { Page } from '../models/page';
 import { BookService } from '../services/book.service';
 import { RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 
+
+interface SortOption {
+  label: string;
+  sortBy: string;
+  sortDirection: string;
+}
 @Component({
   selector: 'app-home-component',
-  imports: [ButtonModule, CardModule, RouterModule, PaginatorModule],
+  imports: [ButtonModule, CardModule, RouterModule, PaginatorModule, InputTextModule, FormsModule, DropdownModule],
   templateUrl: './home-component.component.html',
   styleUrl: './home-component.component.scss'
 })
 export class HomeComponentComponent {
-  books: Book[] = []
+  books: BookWithImageDTO[] = []
   totalRecords: number = 0; // Total books
   rows: number = 10; // Books per page
   currentPage: number = 0; // Current Page (0-based)
   isDeleteInProgress: boolean = false;
+  searchQuery: string = ''; // Used on filtered search
+  sortOptions: SortOption[] = [
+    { label: 'Title (A-Z)', sortBy: 'title', sortDirection: 'ASC' },
+    { label: 'Title (Z-A)', sortBy: 'title', sortDirection: 'DESC' },
+    { label: 'Author (A-Z)', sortBy: 'author', sortDirection: 'ASC' },
+    { label: 'Author (Z-A)', sortBy: 'author', sortDirection: 'DESC' },
+    { label: 'Pages (Low to High)', sortBy: 'pages', sortDirection: 'ASC' },
+    { label: 'Pages (High to Low)', sortBy: 'pages', sortDirection: 'DESC' },
+    { label: 'Price (Low to High)', sortBy: 'price', sortDirection: 'ASC' },
+    { label: 'Price (High to Low)', sortBy: 'price', sortDirection: 'DESC' }
+  ];
+  selectedSortOption: SortOption = this.sortOptions[0];
   constructor(
     private bookService: BookService,
     private messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
-    this.loadBooks(this.currentPage, this.rows);
+    this.loadBooks(this.currentPage, this.rows, this.searchQuery, this.selectedSortOption.sortBy, this.selectedSortOption.sortDirection); // Pass 0-based page to backend
   }
 
   /**
@@ -35,19 +56,29 @@ export class HomeComponentComponent {
     * @param page The page number to load.
     * @param size The number of items per page.
   */
-  loadBooks(page: number, size: number): void {
-    this.bookService.getBooks(page, size).subscribe((data: Page<Book>) => {
-      this.books = data.content; // Books current page
-      this.totalRecords = data.totalElements; // Total books
-      this.currentPage = data.number; // Current page
-      this.rows = data.size; // Size page
+  loadBooks(page: number, size: number, query?: string, sortBy?: string, sortDirection?: string): void {
+    this.bookService.getBooks(page, size, query, sortBy, sortDirection).subscribe((data: Page<BookWithImageDTO>) => {
+      this.books = data.content;
+      this.totalRecords = data.totalElements;
+      this.currentPage = data.number;
+      this.rows = data.size;
     });
   }
 
   onPageChange(event: any): void {
-    this.currentPage = event.page; // New page selected
-    this.rows = event.rows; // New page size
-    this.loadBooks(this.currentPage, this.rows);
+    this.currentPage = event.page;
+    this.rows = event.rows;
+    this.loadBooks(event.page, this.rows, this.searchQuery, this.selectedSortOption.sortBy, this.selectedSortOption.sortDirection);
+  }
+
+  searchBooks(): void {
+    this.currentPage = 0; // Reset to first page
+    this.loadBooks(0, this.rows, this.searchQuery, this.selectedSortOption.sortBy, this.selectedSortOption.sortDirection); // Pass 0-based page to backend
+  }
+
+  onSortChange(): void {
+    this.currentPage = 0; // Reset to first page
+    this.loadBooks(0, this.rows, this.searchQuery, this.selectedSortOption.sortBy, this.selectedSortOption.sortDirection); // Pass 0-based page to backend
   }
 
   deleteBook(id: number) {
@@ -60,7 +91,7 @@ export class HomeComponentComponent {
           detail: 'Book deleted',
         });
         this.isDeleteInProgress = false;
-        this.loadBooks(this.currentPage, this.rows); // Reload current page
+        this.loadBooks(this.currentPage, this.rows, this.searchQuery, this.selectedSortOption.sortBy, this.selectedSortOption.sortDirection);
       },
       error: () => {
         this.isDeleteInProgress = false;

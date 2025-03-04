@@ -1,11 +1,36 @@
+<!-- Button create book -->
 <a routerLink="/book-form-component/new" class="p-button font-bold w-max" style="margin-bottom: 1rem;">
     Create new book
 </a>
+
+<!-- Search field -->
+<div class="flex gap-2 mb-3">
+    <input pInputText type="text" placeholder="Search by title or author..." [(ngModel)]="searchQuery" (keyup.enter)="searchBooks()" />
+    <p-button label="Search" icon="pi pi-search" (click)="searchBooks()"></p-button>
+</div>
+
+<!-- Sort Selector -->
+<div class="mb-3">
+    <p-dropdown 
+        [options]="sortOptions" 
+        [(ngModel)]="selectedSortOption" 
+        placeholder="Sort by..." 
+        (onChange)="onSortChange()">
+        <ng-template pTemplate="selectedItem">
+            <div>{{ selectedSortOption.label }}</div>
+        </ng-template>
+        <ng-template let-option pTemplate="item">
+            <div>{{ option.label }}</div>
+        </ng-template>
+    </p-dropdown>
+</div>
+
+<!-- Books List -->
 <div class="flex flex-wrap gap-3">
     @for (book of books; track book.id) {
     <p-card header="{{book.title}}" subheader="{{book.author}}" [style]="{ width: '25rem', overflow: 'hidden' }">
         <ng-template #header>
-            <img alt="Card" class="w-full img" height="260px" [src]="book.image?book.image.imageUrl: '/assets/noImage.png'" />
+            <img alt="Card" class="w-full img" height="260px" [src]="book.imageUrl ? book.imageUrl : '/assets/noImage.png'" />
         </ng-template>
         <ng-template #title> {{book.title}} </ng-template>
         <ng-template #subtitle> {{book.author}} </ng-template>

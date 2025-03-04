@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Book } from '../models/book';
+import { Book, BookWithImageDTO } from '../models/book';
 import { Page } from '../models/page';
 
 @Injectable({
@@ -12,15 +12,19 @@ export class BookService {
 
   constructor(private http: HttpClient) { }
 
-  getBooks(page: number = 0, size: number = 10): Observable<Page<Book>> {
-    return this.http.get<Page<Book>>(`${this.apiUrl}?page=${page}&size=${size}`);
+  getBooks(page: number = 0, size: number = 10, query?: string, sortBy: string = 'title', sortDirection: string = 'ASC'): Observable<Page<BookWithImageDTO>> {
+    let url = `${this.apiUrl}?page=${page}&size=${size}&sortBy=${sortBy}&sortDirection=${sortDirection}`;
+    if (query && query.trim() !== '') {
+      url += `&query=${encodeURIComponent(query)}`;
+    }
+    return this.http.get<Page<BookWithImageDTO>>(url);
   }
 
   getBookById(id: number): Observable<Book> {
     return this.http.get<Book>(`${this.apiUrl}/${id}`);
   }
 
-  createBook(book: Book, image:File): Observable<Book> {
+  createBook(book: Book, image: File): Observable<Book> {
     const formData = new FormData()
     formData.append('book', new Blob([JSON.stringify(book)], { type: 'application/json' }));
     //formData.append("book", JSON.stringify(book));

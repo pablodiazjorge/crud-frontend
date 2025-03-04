@@ -1,3 +1,5 @@
+import { BookWithImageDTO } from './book';
+
 export interface Page<T> {
     content: T[];
     pageable: {
