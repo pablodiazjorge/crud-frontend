@@ -28,3 +28,11 @@
     <p>Non existent books.</p>
     }
 </div>
+
+<!-- Paginator -->
+<p-paginator 
+    [rows]="rows" 
+    [totalRecords]="totalRecords" 
+    (onPageChange)="onPageChange($event)"
+    [rowsPerPageOptions]="[5, 10, 20]">
+</p-paginator>
