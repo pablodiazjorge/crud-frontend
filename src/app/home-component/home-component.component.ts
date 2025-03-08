@@ -110,15 +110,7 @@ export class HomeComponentComponent {
         });
         this.isDeleteInProgress = false;
         this.loadBooks(this.currentPage, this.rows, this.searchQuery, this.selectedSortOption.sortBy, this.selectedSortOption.sortDirection);
-      },
-      error: () => {
-        this.isDeleteInProgress = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Could not delete book.',
-        });
-      },
+      }
     });
   }
 }

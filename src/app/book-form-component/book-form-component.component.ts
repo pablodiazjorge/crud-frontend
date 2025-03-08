@@ -86,12 +86,6 @@ export class BookFormComponentComponent {
         this.formBook.patchValue(foundBook);
       },
       error: () => {
-        // Handles the error case where the book is not found.
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Not found'
-        });
         // Redirects the user to the home page.
         this.router.navigateByUrl('/');
       },
@@ -130,15 +124,7 @@ export class BookFormComponentComponent {
         });
         this.isSaveinProgress = false;
         this.router.navigateByUrl('/');
-      },
-      error: () => {
-        this.isSaveinProgress = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Check the fields and try again.'
-        });
-      },
+      }
     });
   }
 
@@ -161,15 +147,7 @@ export class BookFormComponentComponent {
         });
         this.isSaveinProgress = false;
         this.router.navigateByUrl('/');
-      },
-      error: () => {
-        this.isSaveinProgress = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Check the selected file and try again.'
-        });
-      },
+      }
     });
   }
 
@@ -201,14 +179,6 @@ export class BookFormComponentComponent {
               });
               this.isSaveinProgress = false;
               this.router.navigateByUrl('/');
-            },
-            error: () => {
-              this.isSaveinProgress = false;
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Failed to update the image.'
-              });
             }
           });
         } else {
@@ -220,15 +190,7 @@ export class BookFormComponentComponent {
           this.isSaveinProgress = false;
           this.router.navigateByUrl('/');
         }
-      },
-      error: () => {
-        this.isSaveinProgress = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Check the fields and try again.'
-        });
-      },
+      }
     });
   }
 
