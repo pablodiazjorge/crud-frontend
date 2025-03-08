@@ -1,39 +1,53 @@
-<!-- Button create book -->
-<a routerLink="/book-form-component/new" class="p-button font-bold w-max" style="margin-bottom: 1rem;">
-    Create new book
-</a>
-
-<!-- Search field -->
-<div class="flex gap-2 mb-3">
-    <input pInputText type="text" placeholder="Search by title or author..." [(ngModel)]="searchQuery" (keyup.enter)="searchBooks()" />
-    <p-button label="Search" icon="pi pi-search" (click)="searchBooks()"></p-button>
+<!-- Header Section -->
+<div class="flex justify-content-between align-items-center mb-3">
+    <!-- Button create book -->
+    <a routerLink="/book-form-component/new" class="p-button font-bold w-max" style="margin-bottom: 1rem;">
+        Create new book
+    </a>
+    <!-- Right: Toggle Buttons -->
+    <div class="flex gap-1">
+        <p-button icon="pi pi-th-large" [severity]="isCardView ? 'primary' : 'secondary'" [outlined]="!isCardView"
+            (click)="toggleCardView()" styleClass="p-button-sm" title="Card View">
+        </p-button>
+        <p-button icon="pi pi-list" [severity]="!isCardView ? 'primary' : 'secondary'" [outlined]="isCardView"
+            (click)="toggleTableView()" styleClass="p-button-sm" title="Table View">
+        </p-button>
+    </div>
 </div>
 
-<!-- Sort Selector -->
-<div class="mb-3">
-    <p-dropdown 
-        [options]="sortOptions" 
-        [(ngModel)]="selectedSortOption" 
-        placeholder="Sort by..." 
-        (onChange)="onSortChange()">
-        <ng-template pTemplate="selectedItem">
-            <div>{{ selectedSortOption.label }}</div>
-        </ng-template>
-        <ng-template let-option pTemplate="item">
-            <div>{{ option.label }}</div>
-        </ng-template>
-    </p-dropdown>
+<div class="flex justify-content-between align-items-center mb-3">
+    <!-- Search field -->
+    <div class="flex gap-1">
+        <input pInputText type="text" placeholder="Search by title or author..." [(ngModel)]="searchQuery"
+            (keyup.enter)="searchBooks()" />
+        <p-button label="Search" icon="pi pi-search" (click)="searchBooks()"></p-button>
+    </div>
+    <!-- Sort Selector -->
+    <div class="flex gap-1">
+        <p-select [options]="sortOptions" variant="filled" [(ngModel)]="selectedSortOption" placeholder="Sort by..."
+            (onChange)="onSortChange()">
+            <ng-template pTemplate="selectedItem">
+                <div>{{ selectedSortOption.label }}</div>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+                <div>{{ option.label }}</div>
+            </ng-template>
+        </p-select>
+    </div>
 </div>
 
-<!-- Books List -->
+<!-- Conditional View Rendering -->
+@if (isCardView) {
+<!-- Card View (Existing) -->
 <div class="flex flex-wrap gap-3">
     @for (book of books; track book.id) {
     <p-card header="{{book.title}}" subheader="{{book.author}}" [style]="{ width: '25rem', overflow: 'hidden' }">
         <ng-template #header>
-            <img alt="Card" class="w-full img" height="260px" [src]="book.imageUrl ? book.imageUrl : '/assets/noImage.png'" />
+            <img alt="Card" class="w-full img" height="260px"
+                [src]="book.imageUrl ? book.imageUrl : '/assets/noImage.png'" />
         </ng-template>
         <ng-template #title> {{book.title}} </ng-template>
-        <ng-template #subtitle> {{book.author}} </ng-template>
+        <ng-template #subtitle> Author: {{book.author}} </ng-template>
         <p>
             Pages: {{book.pages}}
         </p>
@@ -53,11 +67,43 @@
     <p>Non existent books.</p>
     }
 </div>
+} @else {
+<!-- Table View (New) -->
+<p-table [value]="books" [tableStyle]="{'width': '100%'}" styleClass="fixed-table">
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 25%;">Title</th>
+            <th style="width: 25%;">Author</th>
+            <th style="width: 15%;">Pages</th>
+            <th style="width: 15%;">Price</th>
+            <th style="width: 20%;">Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-book>
+        <tr>
+            <td style="width: 25%;">{{ book.title }}</td>
+            <td style="width: 25%;">{{ book.author }}</td>
+            <td style="width: 15%;">{{ book.pages }}</td>
+            <td style="width: 15%;">{{ book.price }}$</td>
+            <td style="width: 20%;">
+                <div class="flex gap-1">
+                    <p-button label="Delete" severity="secondary" (onClick)="deleteBook(book.id)" />
+                    <a routerLink="book-form-component/{{ book.id }}" class="p-button font-bold">
+                        Edit
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="5">Non existent books.</td>
+        </tr>
+    </ng-template>
+</p-table>
+}
 
 <!-- Paginator -->
-<p-paginator 
-    [rows]="rows" 
-    [totalRecords]="totalRecords" 
-    (onPageChange)="onPageChange($event)"
+<p-paginator [rows]="rows" [totalRecords]="totalRecords" (onPageChange)="onPageChange($event)"
     [rowsPerPageOptions]="[5, 10, 20]">
 </p-paginator>

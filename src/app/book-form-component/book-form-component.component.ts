@@ -67,7 +67,6 @@ export class BookFormComponentComponent {
     if (id !== 'new') {
       this.edit = true;
       this.getBookById(+id!); //Cast to integer
-      console.log(this.getBookById(+id!));
     }
   }
 

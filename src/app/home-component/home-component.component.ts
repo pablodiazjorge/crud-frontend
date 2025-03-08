@@ -3,13 +3,15 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
-import { Book, BookWithImageDTO } from '../models/book';
+import { BookWithImageDTO } from '../models/book';
+import { TableModule } from 'primeng/table';
 import { Page } from '../models/page';
 import { BookService } from '../services/book.service';
 import { RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { ViewStateService } from '../services/view-state.service';
 
 
 interface SortOption {
@@ -19,7 +21,7 @@ interface SortOption {
 }
 @Component({
   selector: 'app-home-component',
-  imports: [ButtonModule, CardModule, RouterModule, PaginatorModule, InputTextModule, FormsModule, DropdownModule],
+  imports: [ButtonModule, CardModule, RouterModule, PaginatorModule, InputTextModule, FormsModule, SelectModule, TableModule],
   templateUrl: './home-component.component.html',
   styleUrl: './home-component.component.scss'
 })
@@ -41,10 +43,26 @@ export class HomeComponentComponent {
     { label: 'Price (High to Low)', sortBy: 'price', sortDirection: 'DESC' }
   ];
   selectedSortOption: SortOption = this.sortOptions[0];
+  isCardView: boolean = true;
+
   constructor(
     private bookService: BookService,
     private messageService: MessageService,
-  ) { }
+    private viewStateService: ViewStateService // Inject the service
+  ) {
+    // Initialize isCardView from the service
+    this.isCardView = this.viewStateService.getIsCardView();
+  }
+
+  toggleCardView(): void {
+    this.isCardView = true;
+    this.viewStateService.setIsCardView(this.isCardView);
+  }
+
+  toggleTableView(): void {
+    this.isCardView = false;
+    this.viewStateService.setIsCardView(this.isCardView);
+  }
 
   ngOnInit(): void {
     this.loadBooks(this.currentPage, this.rows, this.searchQuery, this.selectedSortOption.sortBy, this.selectedSortOption.sortDirection); // Pass 0-based page to backend

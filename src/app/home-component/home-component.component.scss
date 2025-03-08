@@ -1,3 +1,45 @@
+:host {
+    display: block;
+    padding: 1rem;
+}
+
+.fixed-table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.fixed-table th,
+.fixed-table td {
+    padding: 0.5rem;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Adds ellipsis for long text */
+    white-space: nowrap;
+}
+
+.fixed-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+}
+
+.fixed-table td {
+    border-bottom: 1px solid #eee;
+}
+
+/* Ensure the actions column buttons fit nicely */
+.fixed-table .p-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Optional: Style for the toggle buttons */
+.p-button-sm {
+    padding: 0.25rem 0.5rem;
+}
+
 .img {
     object-fit: cover;
 }
