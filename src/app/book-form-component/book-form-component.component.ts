@@ -99,32 +99,23 @@ export class BookFormComponentComponent {
  */
   createBook() {
     if (this.formBook.invalid) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Check the fields and try again'
-      });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Check the fields and try again' });
       return;
     }
     if (!this.selectedFile) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Choose an image and try again'
-      });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Choose an image and try again' });
       return;
     }
     this.isSaveinProgress = true;
     this.bookService.createBook(this.formBook.value, this.selectedFile).subscribe({
       next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Saved',
-          detail: 'Book saved correctly.'
-        });
+        this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'Book saved correctly.' });
         this.isSaveinProgress = false;
         this.router.navigateByUrl('/');
-      }
+      },
+      error: (err) => {
+        this.isSaveinProgress = false;
+      },
     });
   }
 
@@ -158,39 +149,32 @@ export class BookFormComponentComponent {
    */
   updateBook() {
     if (this.formBook.invalid) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Check the fields and try again'
-      });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Check the fields and try again' }); // Fixed typo
       return;
     }
     this.isSaveinProgress = true;
     this.bookService.updateBook(this.formBook.value).subscribe({
       next: (updatedBook) => {
-        // If a new image is selected, update the image
         if (this.selectedFile) {
           this.bookService.updateBookImage(this.formBook.value.id, this.selectedFile).subscribe({
             next: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Saved',
-                detail: 'Book and image updated correctly.'
-              });
+              this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'Book and image updated correctly.' });
               this.isSaveinProgress = false;
               this.router.navigateByUrl('/');
-            }
+            },
+            error: (err) => {
+              this.isSaveinProgress = false;
+            },
           });
         } else {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Saved',
-            detail: 'Book updated correctly.'
-          });
+          this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'Book updated correctly.' });
           this.isSaveinProgress = false;
           this.router.navigateByUrl('/');
         }
-      }
+      },
+      error: (err) => {
+        this.isSaveinProgress = false;
+      },
     });
   }
 

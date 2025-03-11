@@ -1,7 +1,0 @@
-:host ::ng-deep .p-fileupload-basic .p-fileupload-filename {
-    visibility: hidden;
-}
-
-:host ::ng-deep .p-fileupload-basic .p-fileupload-filename:not(:empty) {
-    visibility: visible;
-}

@@ -75,11 +75,17 @@ export class HomeComponentComponent {
     * @param size The number of items per page.
   */
   loadBooks(page: number, size: number, query?: string, sortBy?: string, sortDirection?: string): void {
-    this.bookService.getBooks(page, size, query, sortBy, sortDirection).subscribe((data: Page<BookWithImageDTO>) => {
-      this.books = data.content;
-      this.totalRecords = data.totalElements;
-      this.currentPage = data.number;
-      this.rows = data.size;
+    this.bookService.getBooks(page, size, query, sortBy, sortDirection).subscribe({
+      next: (data: Page<BookWithImageDTO>) => {
+        this.books = data.content;
+        this.totalRecords = data.totalElements;
+        this.currentPage = data.number;
+        this.rows = data.size;
+      },
+      error: (err) => {
+        this.books = [];
+        this.totalRecords = 0;
+      },
     });
   }
 
@@ -103,14 +109,13 @@ export class HomeComponentComponent {
     this.isDeleteInProgress = true;
     this.bookService.deleteBook(id).subscribe({
       next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Book deleted',
-        });
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Book deleted' });
         this.isDeleteInProgress = false;
         this.loadBooks(this.currentPage, this.rows, this.searchQuery, this.selectedSortOption.sortBy, this.selectedSortOption.sortDirection);
-      }
+      },
+      error: (err) => {
+        this.isDeleteInProgress = false;
+      },
     });
   }
 }
