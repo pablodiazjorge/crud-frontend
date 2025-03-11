@@ -21,24 +21,17 @@ class MockBookService {
   getBooks = jasmine.createSpy('getBooks').and.returnValue({
     subscribe: (o: any) =>
       o.next({
-        content: [],
-        pageable: {
-          pageNumber: 0,
-          pageSize: 10,
-          sort: { empty: true, sorted: false, unsorted: true },
-          offset: 0,
-          paged: true,
-          unpaged: false,
-        },
+        content: [{ id: 1, title: 'Test Book', author: 'Author', pages: 100, price: 10, imageUrl: null, imageId: null, imageName: null, imageImageId: null }],
+        pageable: { pageNumber: 0, pageSize: 10, sort: { empty: true, sorted: false, unsorted: true }, offset: 0, paged: true, unpaged: false },
         last: true,
-        totalElements: 0,
+        totalElements: 1,
         totalPages: 1,
         size: 10,
         number: 0,
         sort: { empty: true, sorted: false, unsorted: true },
         first: true,
-        numberOfElements: 0,
-        empty: true,
+        numberOfElements: 1,
+        empty: false,
       } as Page<BookWithImageDTO>),
   });
   deleteBook = jasmine.createSpy('deleteBook').and.returnValue({ subscribe: (o: any) => o.next() });
@@ -58,6 +51,7 @@ describe('HomeComponentComponent', () => {
   let fixture: ComponentFixture<HomeComponentComponent>;
   let bookService: BookService;
   let messageService: MessageService;
+  let viewStateService: ViewStateService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -85,12 +79,21 @@ describe('HomeComponentComponent', () => {
     component = fixture.componentInstance;
     bookService = TestBed.inject(BookService);
     messageService = TestBed.inject(MessageService);
+    viewStateService = TestBed.inject(ViewStateService);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should load books on init', fakeAsync(() => {
+    component.ngOnInit();
+    tick();
+    expect(bookService.getBooks).toHaveBeenCalledWith(0, 10, '', 'title', 'ASC');
+    expect(component.books.length).toBe(1);
+    expect(component.totalRecords).toBe(1);
+  }));
 
   it('should delete book and reload list on success', fakeAsync(() => {
     component.deleteBook(1);
@@ -101,11 +104,45 @@ describe('HomeComponentComponent', () => {
   }));
 
   it('should handle error when deleting book fails', fakeAsync(() => {
-    (bookService.getBooks as jasmine.Spy).calls.reset(); // Reset calls from ngOnInit
+    (bookService.getBooks as jasmine.Spy).calls.reset();
     bookService.deleteBook = jasmine.createSpy('deleteBook').and.returnValue(throwError(() => new Error('Delete failed')));
     component.deleteBook(1);
     tick();
     expect(bookService.deleteBook).toHaveBeenCalledWith(1);
     expect(bookService.getBooks).not.toHaveBeenCalled();
+  }));
+
+  it('should toggle to card view', () => {
+    component.toggleCardView();
+    expect(component.isCardView).toBe(true);
+    expect(viewStateService.setIsCardView).toHaveBeenCalledWith(true);
+  });
+
+  it('should toggle to table view', () => {
+    component.toggleTableView();
+    expect(component.isCardView).toBe(false);
+    expect(viewStateService.setIsCardView).toHaveBeenCalledWith(false);
+  });
+
+  it('should change page and load books', fakeAsync(() => {
+    component.onPageChange({ page: 1, rows: 20 });
+    tick();
+    expect(bookService.getBooks).toHaveBeenCalledWith(1, 20, '', 'title', 'ASC');
+  }));
+
+  it('should search books and reset to first page', fakeAsync(() => {
+    component.searchQuery = 'test';
+    component.searchBooks();
+    tick();
+    expect(bookService.getBooks).toHaveBeenCalledWith(0, 10, 'test', 'title', 'ASC');
+    expect(component.currentPage).toBe(0);
+  }));
+
+  it('should sort books and reset to first page', fakeAsync(() => {
+    component.selectedSortOption = { label: 'Price (Low to High)', sortBy: 'price', sortDirection: 'ASC' };
+    component.onSortChange();
+    tick();
+    expect(bookService.getBooks).toHaveBeenCalledWith(0, 10, '', 'price', 'ASC');
+    expect(component.currentPage).toBe(0);
   }));
 });
