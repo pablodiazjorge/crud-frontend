@@ -1,6 +1,6 @@
-# Frontend CRUD - Book Management Application
+# Frontend CRUD - Advanced Book Management Application
 
-This is a **Book Management Application** built using **Angular 19.1.7** for the frontend and **Spring Boot** with **PostgreSQL** for the backend. It provides a complete CRUD (Create, Read, Update, Delete) functionality for managing books.
+This is an **Advanced Book Management Application** built using **Angular 19.1.7** for the frontend and **Spring Boot** with **PostgreSQL** for the backend. It provides an enhanced user experience with complete CRUD (Create, Read, Update, Delete) functionalities, improved UI/UX, and additional features for better usability and maintainability.
 
 The frontend leverages modern Angular features along with **PrimeNG** components for an enhanced user interface and **PrimeFlex** for responsive layout management, minimizing the need for custom CSS.
 
@@ -25,10 +25,13 @@ The frontend leverages modern Angular features along with **PrimeNG** components
 ## Overview
 
 This application allows users to perform the following operations:
-- View a list of books.
-- Add new books.
-- Edit existing books.
-- Delete books.
+- View a list of books with enhanced UI components.
+- Add new books with validation and form enhancements.
+- Edit existing books with an improved editing experience.
+- Delete books with confirmation dialogs.
+- Search and filter books dynamically.
+- Pagination for better performance on large datasets.
+- Sort books based on different attributes.
 
 It integrates seamlessly with a Spring Boot backend that connects to a PostgreSQL database for persistent storage.
 
@@ -40,9 +43,9 @@ It integrates seamlessly with a Spring Boot backend that connects to a PostgreSQ
 - **Global Toast Notifications**: Implements centralized toast messages for user feedback.
 - **Responsive Design**: Uses PrimeFlex for a responsive and adaptable layout.
 - **Error Handling**: Provides clear error messages for invalid inputs or failed operations.
-- **Create Functionality**: Includes a create button to create new books.
-- **Delete Functionality**: Includes a delete button for each book card to remove that book.
-- **Edit Functionality**: Includes an edit button for each book card to update that book.
+- **Advanced Search & Filtering**: Users can filter books by title, author, or price range.
+- **Sorting & Pagination**: Ensures smooth browsing and management of large datasets.
+- **Confirmation Dialogs**: Prevents accidental deletions with confirmation prompts.
 
 ---
 
@@ -62,12 +65,12 @@ Before running the application, ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/pablodiazjorge/crud-basic-frontend
+   git clone https://github.com/pablodiazjorge/crud-advanced-frontend
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd crud-basic-frontend
+   cd crud-advanced-frontend
    ```
 
 3. Install dependencies:
@@ -110,7 +113,7 @@ Before running the application, ensure you have the following installed:
 
 The backend is implemented using **Spring Boot** and handles all REST API endpoints for the CRUD operations. Ensure the backend is running before starting the frontend.
 
-To set-up the backend check this repository: https://github.com/pablodiazjorge/crud-basic-backend
+To set up the backend, check this repository: https://github.com/pablodiazjorge/crud-advanced-backend
 
 ---
 
@@ -125,6 +128,8 @@ public class Book {
     private String author;
     private Integer pages;
     private Double price;
+    private String genre;
+    private String publicationDate;
 }
 ```
 
@@ -163,6 +168,7 @@ Ensure the database connection settings in `application.properties` are correctl
   - PrimeFlex
   - Reactive Forms
   - HttpClient for API communication
+  - ngx-pagination for pagination support
 
 - **Backend**:
   - Spring Boot
