@@ -174,6 +174,7 @@ Ensure the database connection settings in `application.properties` are correctl
   - Spring Boot
   - Spring Data JPA
   - Hibernate
+  - Cloudinary API
 
 - **Database**:
   - PostgreSQL
