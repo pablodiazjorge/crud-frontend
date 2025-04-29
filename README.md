@@ -113,7 +113,7 @@ Before running the application, ensure you have the following installed:
 
 The backend is implemented using **Spring Boot** and handles all REST API endpoints for the CRUD operations. Ensure the backend is running before starting the frontend.
 
-To set up the backend, check this repository: https://github.com/pablodiazjorge/crud-basic-backend/tree/advanced
+To set up the backend, check this repository: https://github.com/pablodiazjorge/crud-backend/tree/advanced
 
 ---
 
