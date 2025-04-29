@@ -62,12 +62,12 @@ Before running the application, ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/pablodiazjorge/crud-basic-frontend
+   git clone https://github.com/pablodiazjorge/crud-frontend
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd crud-basic-frontend
+   cd crud-frontend
    ```
 
 3. Install dependencies:
@@ -110,7 +110,7 @@ Before running the application, ensure you have the following installed:
 
 The backend is implemented using **Spring Boot** and handles all REST API endpoints for the CRUD operations. Ensure the backend is running before starting the frontend.
 
-To set-up the backend check this repository: https://github.com/pablodiazjorge/crud-basic-backend
+To set-up the backend check this repository: https://github.com/pablodiazjorge/crud-backend
 
 ---
 
