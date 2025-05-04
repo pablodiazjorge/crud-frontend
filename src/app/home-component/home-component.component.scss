@@ -1,6 +1,7 @@
 :host {
     display: block;
     padding: 1rem;
+    padding-top: 3rem;
 }
 
 .fixed-table {
@@ -42,4 +43,8 @@
 
 .img {
     object-fit: cover;
+}
+
+.content-wrapper {
+    margin: 0 5%;
 }
