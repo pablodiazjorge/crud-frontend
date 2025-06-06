@@ -1,30 +1,23 @@
-import { BookWithImageDTO } from './book';
-
 export interface Page<T> {
-    content: T[];
-    pageable: {
-        pageNumber: number;
-        pageSize: number;
-        sort: {
-            empty: boolean;
-            sorted: boolean;
-            unsorted: boolean;
-        };
-        offset: number;
-        paged: boolean;
-        unpaged: boolean;
-    };
-    last: boolean;
-    totalElements: number;
-    totalPages: number;
-    size: number;
-    number: number;
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
     sort: {
-        empty: boolean;
-        sorted: boolean;
-        unsorted: boolean;
+      empty: boolean;
+      sorted: boolean;
+      unsorted: boolean;
     };
-    first: boolean;
-    numberOfElements: number;
-    empty: boolean;
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  last: boolean;
+  size: number;
+  number: number;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
 }
