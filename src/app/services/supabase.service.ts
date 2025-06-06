@@ -8,6 +8,7 @@ export class SupabaseService {
   constructor() {
     const supabaseUrl = (window as any)._env_.SUPABASE_URL;
     const supabaseAnonKey = (window as any)._env_.SUPABASE_ANON_KEY;
+
     this.supabase = createClient(supabaseUrl, supabaseAnonKey);
   }
 }
