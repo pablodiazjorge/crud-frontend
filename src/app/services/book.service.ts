@@ -6,19 +6,19 @@ import { SupabaseService } from './supabase.service';
 import { Book, BookWithImageDTO } from '../models/book';
 import { Page } from '../models/page';
 import { ErrorHandlerService } from './error-handler.service';
+import { PostgrestSingleResponse } from '@supabase/supabase-js';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookService {
-  private readonly BUCKET_NAME = 'book-images'; // Nombre del bucket en Supabase Storage
+  private readonly BUCKET_NAME = 'book-images';
 
   constructor(
     private supabaseService: SupabaseService,
     private errorHandler: ErrorHandlerService
   ) {}
 
-  // Obtener libros con paginación y búsqueda
   getBooks(
     page: number = 0,
     pageSize: number = 10,
@@ -37,65 +37,58 @@ export class BookService {
       .range(fromIndex, toIndex);
 
     return from(
-      query.then(
-        ({
-          data,
-          error,
-          count,
-        }: {
-          data: any[];
-          error: any;
-          count: number | null;
-        }) => {
-          if (error) throw error;
+      query.then((response: PostgrestSingleResponse<any[]>) => {
+        if (response.error) throw response.error;
 
-          return {
-            content: data.map(
-              (book: {
-                id: number;
-                title: string;
-                author: string;
-                pages: number;
-                price: number;
-                image_id: number | null;
-                name: string | null;
-                image_url: string | null;
-                image_image_id: string | null;
-              }): BookWithImageDTO => ({
-                id: book.id,
-                title: book.title,
-                author: book.author,
-                pages: book.pages,
-                price: book.price,
-                imageId: book.image_id,
-                imageName: book.name,
-                imageUrl: book.image_url,
-                imageImageId: book.image_image_id,
-              })
-            ),
-            totalElements: count || 0,
-            totalPages: Math.ceil((count || 0) / pageSize),
-            pageable: {
-              pageNumber: page,
-              pageSize,
-              sort: {
-                empty: !sortBy,
-                sorted: !!sortBy,
-                unsorted: !sortBy,
-              },
-              offset: fromIndex,
-              paged: true,
-              unpaged: false,
+        const { data, count } = response;
+        if (!data) throw new Error('No data received');
+
+        return {
+          content: data.map(
+            (book: {
+              id: number;
+              title: string;
+              author: string;
+              pages: number;
+              price: number;
+              image_id: number | null;
+              name: string | null;
+              image_url: string | null;
+              image_image_id: string | null;
+            }) => ({
+              id: book.id,
+              title: book.title,
+              author: book.author,
+              pages: book.pages,
+              price: book.price,
+              imageId: book.image_id,
+              imageName: book.name,
+              imageUrl: book.image_url,
+              imageImageId: book.image_image_id,
+            })
+          ),
+          totalElements: count || 0,
+          totalPages: Math.ceil((count || 0) / pageSize),
+          pageable: {
+            pageNumber: page,
+            pageSize,
+            sort: {
+              empty: !sortBy,
+              sorted: !!sortBy,
+              unsorted: !sortBy,
             },
-            last: page === Math.ceil((count || 0) / pageSize) - 1,
-            size: pageSize,
-            number: page,
-            first: page === 0,
-            numberOfElements: data?.length || 0,
-            empty: (data?.length || 0) === 0,
-          };
-        }
-      )
+            offset: fromIndex,
+            paged: true,
+            unpaged: false,
+          },
+          last: page === Math.ceil((count || 0) / pageSize) - 1,
+          size: pageSize,
+          number: page,
+          first: page === 0,
+          numberOfElements: data.length,
+          empty: data.length === 0,
+        };
+      })
     ).pipe(
       catchError((err: Error) => {
         this.errorHandler.handleError(err, 'Failed to fetch books');
