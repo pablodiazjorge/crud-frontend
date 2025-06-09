@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node -r dotenv/config mynode.js && ng serve",
-    "build": "node -r dotenv/config mynode.js && ng build",
+    "build": "node -r dotenv/config mynode.js && ng build --output-path dist",
     "vercel-build": "npm run build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
