@@ -1,27 +1,33 @@
+// set-env.js
 const fs   = require('fs');
 const path = require('path');
+
+require('dotenv').config({ path: './src/.env' });
 require('dotenv').config();
 
-const { SUPABASE_URL, SUPABASE_ANON_KEY } = process.env;
+const SUPABASE_URL     = process.env.NG_APP_SUPABASE_URL     || process.env.SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.NG_APP_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error('❌  Missing SUPABASE_URL or SUPABASE_ANON_KEY in .env');
+  console.error('❌ Faltan NG_APP_SUPABASE_URL o NG_APP_SUPABASE_ANON_KEY en .env');
   process.exit(1);
 }
 
-const makeFile = (target, production) => `export const environment = {
+const makeEnv = (production) => `export const environment = {
   production: ${production},
   SUPABASE_URL: '${SUPABASE_URL}',
   SUPABASE_ANON_KEY: '${SUPABASE_ANON_KEY}',
 };
 `;
 
-[
-  { file: 'environment.ts',               prod: false },
-  { file: 'environment.development.ts',   prod: false },
-  { file: 'environment.prod.ts',          prod: true  },
-].forEach(({ file, prod }) => {
-  const fullPath = path.join(__dirname, 'src', 'environments', file);
-  fs.writeFileSync(fullPath, makeFile(fullPath, prod));
-  console.log(`📝  Wrote ${file}`);
+const envDir = path.join(__dirname, 'src', 'environments');
+const files = [
+  { name: 'environment.ts',     prod: false },
+  { name: 'environment.prod.ts', prod: true  }
+];
+
+files.forEach(({ name, prod }) => {
+  const filePath = path.join(envDir, name);
+  fs.writeFileSync(filePath, makeEnv(prod));
+  console.log(`📝 Generado ${filePath}`);
 });
