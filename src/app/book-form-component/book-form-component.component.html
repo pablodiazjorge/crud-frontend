@@ -24,7 +24,7 @@
                     accept="image/*" maxFileSize="1000000" (onSelect)="onFileSelected($event)" />
             </div>
             <div class="flex gap-2">
-                <p-button label="Save" [loading]="isSaveinProgress" type="submit" />
+                <p-button label="Save" [loading]="isSaveinProgress" type="submit" disabled="true"/>
             </div>
         </form>
     </p-card>

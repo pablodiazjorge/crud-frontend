@@ -57,7 +57,7 @@
             </p>
             <ng-template #footer>
                 <div class="flex gap-1 mt-1">
-                    <p-button (onClick)="deleteBook(book.id)" label="Delete" severity="secondary" />
+                    <p-button (onClick)="deleteBook(book.id)" label="Delete" severity="secondary" disabled="true"/>
                     <a routerLink="book-form-component/{{ book.id }}" class="p-button font-bold">
                         Edit
                     </a>
