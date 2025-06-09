@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "buildCommand": "node -r dotenv/config mynode.js && ng build",
+  "outputDirectory": "dist/crud",
+  "routes": [
+    {
+      "src": "/.*",
+      "dest": "/index.html"
+    }
+  ]
+}
