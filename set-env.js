@@ -6,8 +6,8 @@ require('dotenv').config();
 
 const API_URL     = process.env.NG_APP_API_URL     || process.env.API_URL;
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error('❌ Faltan NG_APP_SUPABASE_URL o NG_APP_SUPABASE_ANON_KEY en .env');
+if (!API_URL) {
+  console.error('❌ Faltan NG_APP_API_URL en .env');
   process.exit(1);
 }
 
