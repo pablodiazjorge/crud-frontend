@@ -10,8 +10,8 @@ The frontend leverages modern Angular features along with **PrimeNG** components
 
 - [Overview](#overview)
 - [Features](#features)
-- [Backend Setup](#backend-setup)
 - [Frontend Setup](#frontend-setup)
+- [Backend Setup](#backend-setup)
 - [Technologies Used](#technologies-used)
 
 ---
@@ -44,6 +44,13 @@ It integrates seamlessly with a Spring Boot backend connected to a PostgreSQL da
 
 ---
 
+## Frontend Setup
+
+The frontend application is deployed on Vercel:  
+🔗 [advanced-book-management-demo](https://book-management-advanced-pablodiazjorges-projects.vercel.app/)
+
+---
+
 ## Backend Setup
 
 The backend is implemented using **Spring Boot** and handles all REST API endpoints for the CRUD operations. Ensure the backend is running before starting the frontend.
@@ -51,12 +58,6 @@ The backend is implemented using **Spring Boot** and handles all REST API endpoi
 To set up the backend, check this repository: https://github.com/pablodiazjorge/crud-backend/tree/advanced
 
 ---
-
-## Frontend Setup
-
-The frontend application is deployed on Vercel:  
-🔗 [advanced-book-management-demo](https://book-management-advanced-pablodiazjorges-projects.vercel.app/)
-
 
 ## Technologies Used
 
