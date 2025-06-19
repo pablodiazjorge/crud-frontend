@@ -5,12 +5,13 @@ import { Book, BookWithImageDTO } from '../models/book';
 import { Page } from '../models/page';
 import { catchError } from 'rxjs/operators';
 import { ErrorHandlerService } from './error-handler.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
-  private apiUrl = 'http://localhost:8080/book';
+  private apiUrl = environment.API_URL;
 
   constructor(
     private http: HttpClient,
