@@ -10,32 +10,30 @@ The frontend leverages modern Angular features along with **PrimeNG** components
 
 - [Overview](#overview)
 - [Features](#features)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
+- [Frontend Setup](#frontend-setup)
 - [Backend Setup](#backend-setup)
-- [Database Structure](#database-structure)
-- [Running the Application](#running-the-application)
-- [Application URLs](#application-urls)
 - [Technologies Used](#technologies-used)
 
 ---
 
 ## Overview
 
-This application allows users to perform the following operations:
-- View a list of books.
-- Add new books.
-- Edit existing books.
-- Delete books.
+This branch is used for the online deployment of the application. The application itself is the same as in the [simple-book-management](https://github.com/pablodiazjorge/crud-frontend/tree/simple) branch, but with environment variable configurations that enable secure deployment to the Vercel platform.
 
-It integrates seamlessly with a Spring Boot backend that connects to a PostgreSQL database for persistent storage.
+It integrates seamlessly with a Spring Boot backend connected to a PostgreSQL database for persistent cloud storage.
+
+> ⚠️ **Note**: The deployment is hosted using free-tier plans. As a result, the backend server may go into hibernation after periods of inactivity. When this happens, the first request may take a couple of minutes to respond while the server starts up. If the data does not load initially, it is recommended to wait a couple of minutes until the server is ready.
 
 ---
 
 ## Features
 
+### Live version
+- **Environment Variables**: Configuration using Angular's `environment` folder and `dotenv`.
+- **Deployment**: Uses Vercel with environment variables configuration to deploy the application.
+- **Cloud Setup**: Uses Vercel for the frontend, Render for the backend API, and Neon for PostgreSQL.
+
+### Book Management Features
 - **Reactive Forms**: Utilizes Angular's reactive forms for robust form handling and validation.
 - **Global Toast Notifications**: Implements centralized toast messages for user feedback.
 - **Responsive Design**: Uses PrimeFlex for a responsive and adaptable layout.
@@ -46,128 +44,42 @@ It integrates seamlessly with a Spring Boot backend that connects to a PostgreSQ
 
 ---
 
-## Getting Started
+## Frontend Setup
 
-### Prerequisites
-
-Before running the application, ensure you have the following installed:
-
-- **Angular CLI** (v19+)
-- **Node.js** (v18+)
-- **Java Development Kit (JDK)** (v17+)
-- **Maven** (for building the Spring Boot backend)
-- **PostgreSQL** (for the database)
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/pablodiazjorge/crud-frontend
-   ```
-
-2. Navigate to the project directory:
-   ```bash
-   cd crud-frontend
-   ```
-
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-### Configuration
-
-#### Frontend Configuration
-
-- Open the `book.service.ts` file located in the `src/app/services` folder.
-- Update the API base URL to match your backend server:
-  ```typescript
-  export class BookService {
-  private apiUrl = 'http://localhost:8080/book'; // Adjust this URL if your backend runs on a different host or port
-  };
-  ```
-
-#### Backend Configuration
-
-- Locate the `application.properties` file in the backend project.
-- Configure the database connection details:
-  ```properties
-  spring.datasource.url=jdbc:postgresql://localhost:5432/your-database-name
-  spring.datasource.username=your-username
-  spring.datasource.password=your-password
-  spring.jpa.hibernate.ddl-auto=update
-  ```
-
-- Locate the `BookController.java` file in the backend project.
-- Configure the host/port to match the frontend:
-  ```properties
-  @CrossOrigin("http://localhost:4200/")
-  ```
-
----
+The frontend application is deployed on Vercel:  
+🔗 [basic-book-management-demo](https://crud-frontend-pablodiazjorges-projects.vercel.app/)
 
 ## Backend Setup
 
-The backend is implemented using **Spring Boot** and handles all REST API endpoints for the CRUD operations. Ensure the backend is running before starting the frontend.
+The backend is implemented using **Spring Boot** and handles all REST API endpoints for the CRUD operations.  
+To view the backend repository, visit:  
+🔗 [simple-book-management-backend](https://github.com/pablodiazjorge/crud-backend/tree/docker-simple-demo)
 
-To set-up the backend check this repository: https://github.com/pablodiazjorge/crud-backend
-
----
-
-## Database Structure
-
-The database schema is managed by the backend using JPA entities. Below is the structure of the `Book` entity:
-
-```java
-public class Book {
-    private Long id;
-    private String title;
-    private String author;
-    private Integer pages;
-    private Double price;
-}
-```
-
-Ensure the database connection settings in `application.properties` are correctly configured to match your PostgreSQL instance.
-
----
-
-## Running the Application
-
-1. Start the backend server (as described above).
-2. Start the frontend development server:
-   ```bash
-   ng serve
-   ```
-3. Open your browser and navigate to:
-   ```
-   http://localhost:4200/
-   ```
-
----
-
-## Application URLs
-
-- **Frontend**: `http://localhost:4200/`
-- **Backend**: `http://localhost:8080/`
-
-> **Note**: If you're using a different host or port for either the frontend or backend, make sure to adjust the URLs accordingly in the configuration files.
+> ⚠️ **Note**: As mentioned before, the deployment is hosted using free-tier plans. As a result, the backend server may go into hibernation after periods of inactivity. When this happens, the first request may take a couple of minutes to respond while the server starts up. If the data does not load initially, it is recommended to wait a couple of minutes until the server is ready.
 
 ---
 
 ## Technologies Used
 
-- **Frontend**:
-  - Angular 19.1.7
-  - PrimeNG
-  - PrimeFlex
-  - Reactive Forms
-  - HttpClient for API communication
+### Frontend
 
-- **Backend**:
-  - Spring Boot
-  - Spring Data JPA
-  - Hibernate
+- Angular 19.1.7
+- PrimeNG
+- PrimeFlex
+- Reactive Forms
+- HttpClient (for API communication)
+- Dotenv
+- Vercel (deployment)
 
-- **Database**:
-  - PostgreSQL
+### Backend
+
+- Spring Boot
+- Spring Data JPA
+- Hibernate
+- Docker
+- Render (deployment)
+
+### Database
+
+- PostgreSQL
+- Neon (deployment)
