@@ -10,35 +10,30 @@ The frontend leverages modern Angular features along with **PrimeNG** components
 
 - [Overview](#overview)
 - [Features](#features)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
 - [Backend Setup](#backend-setup)
-- [Database Structure](#database-structure)
-- [Running the Application](#running-the-application)
-- [Application URLs](#application-urls)
+- [Frontend Setup](#frontend-setup)
 - [Technologies Used](#technologies-used)
 
 ---
 
 ## Overview
 
-This application allows users to perform the following operations:
-- View a list of books with enhanced UI components.
-- Add new books with validation and form enhancements.
-- Edit existing books with an improved editing experience.
-- Delete books with confirmation dialogs.
-- Search and filter books dynamically.
-- Pagination for better performance on large datasets.
-- Sort books based on different attributes.
+This branch is used for the online deployment of the application. The application itself is the same as in the [advanced-book-management](https://github.com/pablodiazjorge/crud-frontend/tree/advanced) branch, but with environment variable configurations that enable secure deployment to the Vercel platform.
 
-It integrates seamlessly with a Spring Boot backend that connects to a PostgreSQL database for persistent storage.
+It integrates seamlessly with a Spring Boot backend connected to a PostgreSQL database and Cloudinary API for persistent cloud storage.
+
+> ⚠️ **Note**: The deployment is hosted using free-tier plans. As a result, the backend server may go into hibernation after periods of inactivity. When this happens, the first request may take a couple of minutes to respond while the server starts up. If the data does not load initially, it is recommended to wait a couple of minutes until the server is ready.
 
 ---
 
 ## Features
 
+### Live version
+- **Environment Variables**: Configuration using Angular's `environment` folder and `dotenv`.
+- **Deployment**: Uses Vercel with environment variables configuration to deploy the application.
+- **Cloud Setup**: Uses Vercel for the frontend, Render for the backend API, and Neon for PostgreSQL.
+
+### Book Management Features
 - **Reactive Forms**: Utilizes Angular's reactive forms for robust form handling and validation.
 - **Global Toast Notifications**: Implements centralized toast messages for user feedback.
 - **Responsive Design**: Uses PrimeFlex for a responsive and adaptable layout.
@@ -57,48 +52,11 @@ To set up the backend, check this repository: https://github.com/pablodiazjorge/
 
 ---
 
-## Database Structure
+## Frontend Setup
 
-The database schema is managed by the backend using JPA entities. Below is the structure of the `Book` entity:
+The frontend application is deployed on Vercel:  
+🔗 [advanced-book-management-demo](https://book-management-advanced-pablodiazjorges-projects.vercel.app/)
 
-```java
-public class Book {
-    private Long id;
-    private String title;
-    private String author;
-    private Integer pages;
-    private Double price;
-    private String genre;
-    private String publicationDate;
-}
-```
-
-Ensure the database connection settings in `application.properties` are correctly configured to match your PostgreSQL instance.
-
----
-
-## Running the Application
-
-1. Start the backend server (as described above).
-2. Start the frontend development server:
-   ```bash
-   ng serve
-   ```
-3. Open your browser and navigate to:
-   ```
-   http://localhost:4200/
-   ```
-
----
-
-## Application URLs
-
-- **Frontend**: `http://localhost:4200/`
-- **Backend**: `http://localhost:8080/`
-
-> **Note**: If you're using a different host or port for either the frontend or backend, make sure to adjust the URLs accordingly in the configuration files.
-
----
 
 ## Technologies Used
 
@@ -109,12 +67,17 @@ Ensure the database connection settings in `application.properties` are correctl
   - Reactive Forms
   - HttpClient for API communication
   - ngx-pagination for pagination support
+  - Dotenv
+  - Vercel (deployment)
 
 - **Backend**:
   - Spring Boot
   - Spring Data JPA
   - Hibernate
   - Cloudinary API
+  - Docker
+  - Render (deployment)
 
 - **Database**:
   - PostgreSQL
+  - Neon (deployment)
